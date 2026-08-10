@@ -295,6 +295,9 @@ const I18N = {
     tests:"Тестове",testsSub:"след последната подзадача",testsSubOne:"последно пълно изпълнение",failed:n=>`${n} провалени`,
     buildTook:d=>`разработката отне ${d}`,
     reqs:"Изисквания",reqsSub:(d,f,p)=>`отпаднали ${d} · отложени ${f} · заместители ${p}`,
+    reqsTitle:"Изисквания от брифа",thReqId:"№",thReqText:"Изискване",thReqStatus:"Статус",
+    reqStatus:{open:"отворено",'in-spec':"в спецификацията",'in-ticket':"в подзадача",done:"готово",
+      placeholder:"заместител",deferred:"отложено",dropped:"отпаднало"},
     progress:"Ход на разработката",
     wave:(n,c)=>c>1?`Вълна ${n} — ${c} подзадачи паралелно`:`Вълна ${n}`,
     chipDone:n=>`${n} готови`,chipRun:n=>`${n} в процес`,chipWait:n=>`${n} чакат`,chipFailed:n=>`${n} провалени`,
@@ -331,6 +334,9 @@ const I18N = {
     tests:"Tests",testsSub:"after the last ticket",testsSubOne:"last full run",failed:n=>`${n} failed`,
     buildTook:d=>`development took ${d}`,
     reqs:"Requirements",reqsSub:(d,f,p)=>`dropped ${d} · deferred ${f} · placeholders ${p}`,
+    reqsTitle:"Requirements from the brief",thReqId:"#",thReqText:"Requirement",thReqStatus:"Status",
+    reqStatus:{open:"open",'in-spec':"in spec",'in-ticket':"in ticket",done:"done",
+      placeholder:"placeholder",deferred:"deferred",dropped:"dropped"},
     progress:"Build progress",
     wave:(n,c)=>c>1?`Wave ${n} — ${c} tickets in parallel`:`Wave ${n}`,
     chipDone:n=>`${n} done`,chipRun:n=>`${n} running`,chipWait:n=>`${n} waiting`,chipFailed:n=>`${n} failed`,
@@ -520,6 +526,9 @@ function render(lang){
   const statusColor = s => s === 'done' ? 'var(--ok)' : s === 'failed' ? 'var(--bad)'
     : s === 'in-progress' ? 'var(--warn)' : 'var(--line)';
 
+  const reqStatusColor = s => s === 'done' ? 'var(--ok)' : s === 'dropped' ? 'var(--bad)'
+    : (s === 'in-spec' || s === 'in-ticket' || s === 'placeholder') ? 'var(--warn)' : 'var(--line)';
+
   const waves = [...new Set(T.map(t => t.wave ?? 1))].sort((a,b) => a-b);
   // Лентата показва СЪСТОЯНИЕ, а не дял. Преди ширината ѝ беше продължителност
   // спрямо най-дългата подзадача — и готова подзадача за 19 от 28 минути изглеждаше
@@ -578,6 +587,19 @@ function render(lang){
     <td class="mins">${t.tests ? (t.tests.failed ? `<span style="color:var(--bad)">${t.tests.failed} ✗</span>` : t.tests.passed + ' ✓') : '—'}</td>
     <td class="mins">${t.commit ? `<code>${esc(t.commit).slice(0,7)}</code>` : '—'}</td>
   </tr>`).join('');
+
+  const reqItems = R.items || [];
+  const reqRows = reqItems.map(r => `<tr>
+    <td><b>${esc(r.id)}</b></td>
+    <td>${esc(r.text)}</td>
+    <td><span class="dot" style="background:${reqStatusColor(r.status)}"></span>${esc(L.reqStatus[r.status] || r.status)}</td>
+  </tr>`).join('');
+  const reqsBlock = reqItems.length
+    ? `<h2>${L.reqsTitle}</h2><div class="scroll"><table>
+         <thead><tr><th>${L.thReqId}</th><th>${L.thReqText}</th><th>${L.thReqStatus}</th></tr></thead>
+         <tbody>${reqRows}</tbody>
+       </table></div>`
+    : '';
 
   // Ниво T0: подзадачи няма по замисъл — вместо празна таблица показваме самото изпълнение.
   const sp = S.singlePass || null;
@@ -689,6 +711,8 @@ function render(lang){
 
   <h2>${L.stagesTitle}</h2>
   <div class="stages">${stageRows}</div>
+
+  ${reqsBlock}
 
   ${worklog}
 

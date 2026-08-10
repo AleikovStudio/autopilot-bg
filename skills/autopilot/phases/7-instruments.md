@@ -114,7 +114,11 @@ Say it in one line, once:
   ],
   "requirements": {
     "total": 23, "done": 9, "inTicket": 8, "inSpec": 0,
-    "placeholder": 2, "deferred": 1, "dropped": 3
+    "placeholder": 2, "deferred": 1, "dropped": 3,
+    "items": [
+      { "id": "R01", "text": "приема заявки за ремонт на техника", "status": "in-ticket" },
+      { "id": "R04", "text": "и да дублира по SMS", "status": "dropped" }
+    ]
   },
   "tickets": [
     {
@@ -149,6 +153,8 @@ Say it in one line, once:
 Ticket `status`: `pending` · `in-progress` · `done` · `failed`.
 `wave` and `zone` come from Phase 4 — the wave decides what flies together, the zone is why it may.
 `tests` is the last **full** suite run; `blind` stays `null` until the final phase.
+
+**`requirements.items` is what lets the dashboard show the actual requirements, not just their counts.** One row per live manifest entry — `id` (`R01`, `R02.1`, …), `text` (the verbatim brief quote, same as the manifest's Основание column), `status` (one of the manifest statuses: `open` · `in-spec` · `in-ticket` · `done` · `placeholder` · `deferred` · `dropped`). Keep it in lockstep with `manifest.md` — every manifest edit that changes a status is also an `items` edit, in the same write. Older runs written before this field existed simply omit it; the dashboard renders nothing extra when it's missing, it does not error.
 
 **`blind` has exactly three fields, and the names are not negotiable** — the dashboard reads them literally:
 
@@ -240,7 +246,7 @@ Then re-point the pane, if that is where the dashboard lives. In the system brow
 At T0 there are no tickets by design, and a dashboard that shows only a running clock is the failure this section exists to prevent. **A small build is not an excuse for empty instruments.** Fill in:
 
 - **stages** — `plan` as `skipped` with the reason, everything else with real timestamps. This alone is most of what the user wants to know.
-- **`requirements` counts** — updated when the build lands, exactly as they would be after a ticket. This is what makes „покритие на брифа“ a number instead of a zero.
+- **`requirements` counts and `items`** — updated when the build lands, exactly as they would be after a ticket. This is what makes „покритие на брифа“ a number instead of a zero, and lets the user read the actual requirements on the dashboard, not just a percentage.
 - **`singlePass`** — the one build pass, in the shape a ticket would have had:
 
 ```json
