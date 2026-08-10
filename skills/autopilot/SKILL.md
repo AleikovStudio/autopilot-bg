@@ -30,8 +30,8 @@ This file is the orchestrator: modes, phase order, gates. The rules for each pha
 | 1 Manifest | `phases/1-manifest.md` | `brief.md`, `manifest.md` |
 | 2 Briefing | `phases/2-briefing.md` | answers recorded into the manifest |
 | 3 Spec | `phases/3-spec.md` | `spec.md` |
-| 4 Plan | `phases/4-plan.md` | `tickets/NN-*.md` (or none — see tiers) |
-| 5 Subagents | `phases/5-subagents.md` | code, commits, `interfaces.md` |
+| 4 Plan | `phases/4-plan.md` | `tickets/NN-*.md` (or none — see tiers), each with an `owner` |
+| 5 Subagents | `phases/5-subagents.md` | code, commits, `interfaces.md` — or, for `human`-owned tickets, a wait for the user's word |
 | 6 Review | `phases/6-review.md` | per-ticket review |
 | 7 Instruments | `phases/7-instruments.md` | `state.json`, `dashboard.html` (opened for the user) |
 | 8 Final | `phases/8-final.md` | blind acceptance, final report |
