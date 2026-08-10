@@ -40,13 +40,13 @@ Created empty in Phase 0. **You** — the orchestrator — append to it after ea
 - Какво е забранено да се променя (конфигурационен файл, схема, общ модул и негов собственик)
 - Ако липсва зависимост — не я добавяй сам, върни `BLOCKED` с името ѝ
 
-## От таск 01 — скелет на проекта
+## От подзадача 01 — скелет на проекта
 
 - `db.connect(path) -> Connection` — единствената точка за връзка
-- Таблици `requests`, `clients`; миграции в `migrations/`, собственик — таск 01
+- Таблици `requests`, `clients`; миграции в `migrations/`, собственик — подзадача 01
 - Тестове: `npm test`, един файл — `npm test -- <path>`
 
-## От таск 02 — приемане на заявки
+## От подзадача 02 — приемане на заявки
 
 - `createRequest({phone, address, problem}) -> {id, createdAt}`
 - Валидация на телефон — `validatePhone(raw) -> {ok, normalized}`, не пиши своя
@@ -63,7 +63,7 @@ STATUS: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
 FILES: създадени и променени
 TESTS: команда → резултат (например `npm test` → 34 passed)
 INTERFACES: публични сигнатури, схеми, формати на събития, които изложи навън
-            — това, което следващите таскове ще използват
+            — това, което следващите подзадачи ще използват
 REQUIREMENTS: R01 done | R01.1 placeholder — <какво липсваше>
 CONCERNS: какво е направено с уговорка и защо
 BLOCKERS: какво липсваше (зависимост, решение, достъп)
@@ -100,7 +100,7 @@ In this order, every time:
 4. **Run the Phase 6 checklist** over the diff (`phases/6-review.md`).
 5. **Run the full test suite**, not just the ticket's own tests. A regression introduced now costs minutes; found eight tickets later it costs the evening. Red → fix before moving on.
 6. **Commit** — one commit per ticket, the ticket number in the subject. These are the user's rollback points.
-7. **Update the instruments** (`phases/7-instruments.md`) — one line of state, one line of the dashboard: the ticket's `finishedAt`, tests and commit, the `requirements` counts, the `build` and `review` stage notes („3 от 5 таска готови“), `updatedAt`.
+7. **Update the instruments** (`phases/7-instruments.md`) — one line of state, one line of the dashboard: the ticket's `finishedAt`, tests and commit, the `requirements` counts, the `build` and `review` stage notes („3 от 5 подзадачи готови“), `updatedAt`.
 8. **Top up the project memory — only if something was discovered.** The real test command, a gotcha that cost time, a new variable in `.env.example`. One line appended between the markers, never a rewrite; the architecture is written once, at the end. Most tickets add nothing, and that is the correct rate. Rules in `phases/9-memory.md`.
 9. **Tell the user one plain-language line**: „Ботът приема заявки — 3 от 8 готови“. No diffs, no jargon, no file lists.
 

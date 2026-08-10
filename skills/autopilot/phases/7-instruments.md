@@ -107,8 +107,8 @@ Say it in one line, once:
     { "id": "manifest",  "status": "done",    "startedAt": "2026-08-07T14:05:28+03:00", "finishedAt": "2026-08-07T14:11:09+03:00" },
     { "id": "briefing",  "status": "done",    "startedAt": "2026-08-07T14:11:09+03:00", "finishedAt": "2026-08-07T14:26:22+03:00", "note": "6 въпроса" },
     { "id": "spec",      "status": "done",    "startedAt": "2026-08-07T14:26:22+03:00", "finishedAt": "2026-08-07T14:44:13+03:00" },
-    { "id": "plan",      "status": "done",    "startedAt": "2026-08-07T14:44:13+03:00", "finishedAt": "2026-08-07T14:50:38+03:00", "note": "5 таска, ниво T2" },
-    { "id": "build",     "status": "active",  "startedAt": "2026-08-07T14:50:38+03:00", "note": "3 от 5 таска готови" },
+    { "id": "plan",      "status": "done",    "startedAt": "2026-08-07T14:44:13+03:00", "finishedAt": "2026-08-07T14:50:38+03:00", "note": "5 подзадачи, ниво T2" },
+    { "id": "build",     "status": "active",  "startedAt": "2026-08-07T14:50:38+03:00", "note": "3 от 5 подзадачи готови" },
     { "id": "review",    "status": "active",  "startedAt": "2026-08-07T15:04:04+03:00", "note": "проверени 3 от 5" },
     { "id": "final",     "status": "pending" }
   ],
@@ -177,7 +177,7 @@ Eight ids, fixed, in this order: `preflight` · `manifest` · `briefing` · `spe
 | `skipped` | consciously not run — **always with a `note` saying why** |
 | `failed` | the phase stopped on a blocker the user has to resolve |
 
-- **`note` is one short human phrase**, not a log line: „6 въпроса“, „ниво T0 — без разбивка на таскове“, „пълен автомат — самобрифинг“, „проверени 3 от 5“.
+- **`note` is one short human phrase**, not a log line: „6 въпроса“, „ниво T0 — без разбивка на подзадачи“, „пълен автомат — самобрифинг“, „проверени 3 от 5“.
 - **`build` and `review` may both be `active`.** Reviews run per ticket inside the build, and pretending otherwise would make the timings lie.
 - **`skipped` is normal and must be visible.** Briefing in full mode, `plan` at tier T0 — a stage silently left `pending` forever reads as „разработката е заседнала“.
 
@@ -185,7 +185,7 @@ Eight ids, fixed, in this order: `preflight` · `manifest` · `briefing` · `spe
 
 **The whole ticket array is written at the end of Phase 4**, every ticket `pending`, with its `blockedBy`, `wave` and `zone`. Everything the dashboard says about the build reads from that array, and an array that is still empty makes the dashboard state three things that are all false at once:
 
-- „още няма разбивка на таскове“ on the Таскове card, with no count — while the tickets are on disk and the build is running;
+- „още няма разбивка на подзадачи“ on the Подзадачи card, with no count — while the tickets are on disk and the build is running;
 - no „Ход на разработката“ block at all — the block only exists when there are tickets, so the one screen that answers „на какъв етап е разработката“ is missing exactly during the build;
 - a progress bar that cannot move with the work, because the share of finished tickets is `0 / 0`.
 
@@ -197,7 +197,7 @@ The build block earns its place only if the rows are true at a glance, which tak
 
 - **`status`** — a filled bar is a ticket that has started, coloured by status: green done, amber running (and pulsing), red failed, dashed outline for what has not begun. A ticket left `pending` while its subagent is flying shows as „не е започнат“ and makes the screen a lie.
 - **`startedAt` at launch, `finishedAt` at return** — that is where every per-ticket duration comes from, live for the running ones. The header line („Сега: 04 …“) is built from the same marks.
-- **`wave`** — rows group by wave, and a wave with more than one ticket is labelled „2 таска паралелно“. This is the user's only view of parallelism actually happening.
+- **`wave`** — rows group by wave, and a wave with more than one ticket is labelled „2 подзадачи паралелно“. This is the user's only view of parallelism actually happening.
 
 ## Progress bar — how the percentage is built
 
@@ -267,13 +267,13 @@ The template computes all of this from `STATE`. You supply the facts; it does th
 | **Лента с етапите** | the whole cycle at once — what is done, what was skipped and why, what has not started. Works when there are no tickets at all |
 | **Изминало време** | live, to the second, from `startedAt` |
 | **Остава по критичния път** | remaining time is `median × longest remaining chain of blockers`, **not** the sum of what is left. With parallel waves the sum overstates by two or three times |
-| Готови таскове, % | familiar progress, honest about effort. At T0 it says „без разбивка“ instead of a fake zero |
+| Готови подзадачи, % | familiar progress, honest about effort. At T0 it says „без разбивка“ instead of a fake zero |
 | **Дълг: заместители · допускания · празни променливи** | decides whether the result is *usable*. 100% of tickets with eight placeholders is not a finished project, and this is the number that says so |
-| Тестове и делтата им по таскове | catches a regression at ticket 3 instead of at the end |
+| Тестове и делтата им по подзадачи | catches a regression at ticket 3 instead of at the end |
 | Повторения | a ticket that needed a retry is a signal the cut was wrong, not that luck was bad |
-| **В процес сега: кой таск, откога върви** | during the build this is the question, and „3 от 8 готови“ does not answer it. Two names with two running clocks also make parallel work visible as it happens |
+| **В процес сега: коя подзадача, откога върви** | during the build this is the question, and „3 от 8 готови“ does not answer it. Two names with two running clocks also make parallel work visible as it happens |
 | **Вълни и тяхната ширина** | what is flying together and what is waiting on it — the plan's parallelism, checkable against reality |
-| **Време за всеки таск и всеки етап** | over-cutting made visible: a ticket that took forty minutes of context to produce forty lines should not have existed |
+| **Време за всяка подзадача и всеки етап** | over-cutting made visible: a ticket that took forty minutes of context to produce forty lines should not have existed |
 | Пресичания по файлове | validates parallel waves — an overlap is visible before it becomes a conflict |
 | Разминавания от сляпото приемане | at the end: what the manifest calls done and an independent check does not |
 

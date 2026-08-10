@@ -28,7 +28,7 @@ Decide the tier from **what has to be built**, then cut to it. State the tier an
 
 **T0 is real and it is common.** A landing page, a form, a script, a single endpoint — cut nothing, build it in one pass, review once, done. Skipping tickets here is not a shortcut; creating them would be the waste. Say so plainly: „Задачата е малка — събирам направо, без разбивка“.
 
-At T0 the `plan` stage in `state.json` is marked `skipped` with the reason as its note — „ниво T0 — без разбивка на таскове“ — not left `pending`. A stage that never moves reads as a stuck build, and the whole point of the dashboard is that it does not have to be explained.
+At T0 the `plan` stage in `state.json` is marked `skipped` with the reason as its note — „ниво T0 — без разбивка на подзадачи“ — not left `pending`. A stage that never moves reads as a stuck build, and the whole point of the dashboard is that it does not have to be explained.
 
 Crossing a tier upward needs a reason written into the spec, not a feeling.
 
@@ -81,7 +81,7 @@ A wave of one is a normal answer. Ticket 01 — the shell, the schema, the share
 
 If a wave genuinely has to change, that is a re-cut and it follows the rules for a plan that moved: the reason goes in one line to the user, and if the code forced it, a `D##` row records why. Silent renumbering is the thing to avoid, not renumbering.
 
-Write `wave` into every ticket file and into `state.json`. The dashboard groups the build by waves and marks the parallel ones („Вълна 3 — 2 таска паралелно“); Phase 5 launches each wave in one go.
+Write `wave` into every ticket file and into `state.json`. The dashboard groups the build by waves and marks the parallel ones („Вълна 3 — 2 подзадачи паралелно“); Phase 5 launches each wave in one go.
 
 ## Publishing the plan to the instruments
 
@@ -92,7 +92,7 @@ The moment the ticket files exist, **every ticket goes into `state.json` and int
   "blockedBy": ["02"], "wave": 3, "zone": ["src/admin/"], "status": "pending", "retries": 0 }
 ```
 
-`status: "pending"`, no timestamps yet — they come when the ticket launches. This is one edit, and it is what turns the dashboard from „още няма разбивка на таскове“ into the whole plan with its waves, visible before a line of code is written.
+`status: "pending"`, no timestamps yet — they come when the ticket launches. This is one edit, and it is what turns the dashboard from „още няма разбивка на подзадачи“ into the whole plan with its waves, visible before a line of code is written.
 
 **A build running while the dashboard still says the tickets were never cut is broken instruments**, and it breaks them at the exact moment the user is most likely to look. The count, the waves, the „ход на разработката“ block and the honest progress bar all read from this array — nothing on the dashboard can show what was never written. See `phases/7-instruments.md`.
 
@@ -153,7 +153,7 @@ Then update the manifest: `in-spec` → `in-ticket`, with the ticket number, and
 
 Write the files first. **A ticket that exists only in the dialogue is not a ticket** — what the user sees is a summary of files already on disk.
 
-**Parallelism gets one line, and only if it is true**: „Част от тасковете ще вървят паралелно — 6 таска в 4 вълни“. It is the one piece of process the user actually feels, because it changes how long they wait. Never claim it for a plan that is one long chain.
+**Parallelism gets one line, and only if it is true**: „Част от подзадачите ще вървят паралелно — 6 подзадачи в 4 вълни“. It is the one piece of process the user actually feels, because it changes how long they wait. Never claim it for a plan that is one long chain.
 
 **semi** — one screen, plain language, no technical detail, one line per ticket saying what the user will be able to do when it lands. Then: „Показвам плана и започвам. Кажи «стоп», ако нещо не е наред“. Then start. Do not wait for approval — waiting is the failure mode this skill exists to remove. **Never promise a countdown:** you cannot hold a pause, so a stated delay is a promise you will break. The user's window to object is their own reaction, and saying so plainly is the honest version of it.
 

@@ -80,7 +80,7 @@ Cheap, written before anything is built, and it is what survives an interrupted 
 
 ## Как работи Autopilot тук
 
-Разработката се води от умението `/autopilot`. Изисквания, спецификация и таскове — в `.autopilot/`.
+Разработката се води от умението `/autopilot`. Изисквания, спецификация и подзадачи — в `.autopilot/`.
 Прогрес — `.autopilot/dashboard.html`. Правило: изискване от `manifest.md`
 може да махне само потребителят.
 
@@ -157,7 +157,7 @@ The file scales with the project, exactly like the ticket tiers do.
 
 ### Folding in interfaces.md
 
-`interfaces.md` is a working contract between tickets, and its life ends with the run. Its durable content — public signatures, schemas, event formats, module ownership — becomes the Архитектура and Ключови файлове sections. What does not survive: the per-ticket framing („От таск 03…“), anything already obvious from the code, and any instruction addressed to a subagent.
+`interfaces.md` is a working contract between tickets, and its life ends with the run. Its durable content — public signatures, schemas, event formats, module ownership — becomes the Архитектура and Ключови файлове sections. What does not survive: the per-ticket framing („От подзадача 03…“), anything already obvious from the code, and any instruction addressed to a subagent.
 
 The file itself stays in `.autopilot/<slug>/` as the run's record. It is not deleted and it is not maintained.
 

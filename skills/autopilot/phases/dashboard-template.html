@@ -101,7 +101,7 @@
   .bar{height:6px;background:var(--ghost);border-radius:99px;overflow:hidden;margin-top:10px}
   .bar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .3s ease}
   .bar.lg{height:10px;margin-top:12px}
-  /* общ прогрес: етапите по тегло, а вътре в разработката — делът готови таскове */
+  /* общ прогрес: етапите по тегло, а вътре в разработката — делът готови подзадачи */
   .overall{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
     padding:16px 18px;margin-bottom:14px}
   .overall-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
@@ -112,7 +112,7 @@
   h2{font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);
     margin:26px 0 12px;font-weight:600}
   .tl{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;min-width:0}
-  /* обобщение по тасковете — отговор на „докъде е разработката“, преди да се взираш в лентите */
+  /* обобщение по подзадачите — отговор на „докъде е разработката“, преди да се взираш в лентите */
   .tlsum{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
   .chip{font-size:11.5px;letter-spacing:.03em;border:1px solid var(--line);border-radius:999px;
     padding:3px 10px;color:var(--dim);font-variant-numeric:tabular-nums}
@@ -125,22 +125,22 @@
   .tlnow .nowclock{color:var(--warn);font-variant-numeric:tabular-nums}
   .wave{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin:14px 0 8px}
   .wave:first-child{margin-top:0}
-  /* minmax(0,1fr), а не 1fr: при 1fr подът е min-content и дълго име на таск разширява мрежата извън екрана */
+  /* minmax(0,1fr), а не 1fr: при 1fr подът е min-content и дълго име на подзадача разширява мрежата извън екрана */
   .row{display:grid;grid-template-columns:26px minmax(0,1fr) 56px;gap:10px;align-items:center;margin-bottom:6px;font-size:13px}
   .row b{font-weight:600;font-variant-numeric:tabular-nums;color:var(--dim)}
   .row.now b{color:var(--ink)}
   .track{background:var(--ghost);border-radius:6px;height:22px;position:relative;overflow:hidden;min-width:0}
   .fill{position:absolute;inset:0 auto 0 0;border-radius:6px;display:flex;align-items:center;
     padding:0 8px;white-space:nowrap;font-size:12px;color:#fff;overflow:hidden}
-  /* чакащ таск — празен контур, а не запълнена лента: плочката вече е на цяла
+  /* чакаща подзадача — празен контур, а не запълнена лента: плочката вече е на цяла
      ширина и без това „чака“ щеше да изглежда като поредно състояние на запълване */
   .row.wait .track{background:transparent;border:1px dashed var(--line)}
   .fill.pend{background:transparent;border:0;color:var(--dim)}
   /* „в процес“ трябва да се чете като живо, а не като изчезващо: преди плочката
-     гаснеше до opacity .3 заедно с името на таска. Сега пулсира сиянието около
+     гаснеше до opacity .3 заедно с името на подзадачата. Сега пулсира сиянието около
      лентата и яркостта на плочката, а текстът остава четлив през цялото време. */
   .row.now .track{animation:trackGlow 1.9s ease-in-out infinite}
-  /* отблясък пробягва по плочката на текущия таск — движение без фалшив процент */
+  /* отблясък пробягва по плочката на текущата подзадача — движение без фалшив процент */
   .fill.active::after{content:'';position:absolute;inset:0;
     background:linear-gradient(90deg,transparent 0,rgba(255,255,255,.30) 50%,transparent 100%);
     transform:translateX(-100%);animation:sheen 1.9s ease-in-out infinite}
@@ -194,7 +194,7 @@
   footer{margin-top:24px;font-size:12px;color:var(--dim);display:flex;gap:14px;flex-wrap:wrap}
   footer code{overflow-wrap:anywhere}
   .scroll{overflow-x:auto}
-  /* таблицата с таскове се скролва вътре в рамката си, а не смачква седемте колони в каша */
+  /* таблицата с подзадачи се скролва вътре в рамката си, а не смачква седемте колони в каша */
   .scroll table{min-width:560px}
   /* тесен изглед: вграден панел на IDE, странична колона, телефон */
   @media (max-width:460px){
@@ -220,7 +220,7 @@
     th:nth-child(3),td:nth-child(3),
     th:nth-child(5),td:nth-child(5),
     th:nth-child(7),td:nth-child(7){display:none}
-    /* пренася се само името на таска: заглавията и числата не бива да се чупят по букви */
+    /* пренася се само името на подзадачата: заглавията и числата не бива да се чупят по букви */
     th,td{padding:9px 8px;white-space:nowrap}
     td:nth-child(2){white-space:normal;overflow-wrap:anywhere}
   }
@@ -277,37 +277,37 @@ const plural = (n, one, few, many) => {
 const I18N = {
   bg:{lang:"bg",coverage:"Покритие на брифа",ofReq:(a,b)=>`${a} от ${b} ${b===1?'изискване':'изисквания'}`,
     overall:"Прогрес на проекта",overallStages:(a,b)=>`${a} от ${b} етапа готови`,
-    overallTickets:(a,b)=>`${a} от ${b} ${b===1?'таск':'таска'}`,
-    tickets:"Таскове",ticketsDone:p=>`${p}% готово`,retries:n=>` · ${n} ${n===1?'повторение':'повторения'}`,
-    elapsed:"Изминало време",median:m=>`медиана на таск — ${m} мин`,tooEarly:"рано е за оценка",
-    left:"Остава (оценка)",needTwo:"нужни са поне 2 завършени таска",
-    critpath:n=>`критичен път: ${n} ${n===1?'таск':'таска'} във веригата`,
+    overallTickets:(a,b)=>`${a} от ${b} ${b===1?'подзадача':'подзадачи'}`,
+    tickets:"Подзадачи",ticketsDone:p=>`${p}% готово`,retries:n=>` · ${n} ${n===1?'повторение':'повторения'}`,
+    elapsed:"Изминало време",median:m=>`медиана на подзадача — ${m} мин`,tooEarly:"рано е за оценка",
+    left:"Остава (оценка)",needTwo:"нужни са поне 2 завършени подзадачи",
+    critpath:n=>`критичен път: ${n} ${n===1?'подзадача':'подзадачи'} във веригата`,
     stagesTitle:"Етапи",stage:"Текущ етап",stageOf:(a,b)=>`${a} от ${b} етапа`,
     stages:{preflight:"Подготовка",manifest:"Изисквания",briefing:"Брифинг",spec:"Спецификация",
       plan:"План",build:"Разработка",review:"Код-ревю",final:"Приемане"},
     skipped:"пропуснат",notStarted:"не е започнат",allDone:"всичко е готово",
-    noTicketsTier:"без разбивка",notCut:"още няма разбивка на таскове",
-    t0note:(n)=>`Ниво T0 — направено наведнъж, без разбивка на таскове.${n?' '+n:''}`,
-    t0files:n=>`Файлове: ${n}.`,noEta:"ниво T0 — не е нужна оценка",wrapUp:"тасковете са готови, тече приемане",
+    noTicketsTier:"без разбивка",notCut:"още няма разбивка на подзадачи",
+    t0note:(n)=>`Ниво T0 — направено наведнъж, без разбивка на подзадачи.${n?' '+n:''}`,
+    t0files:n=>`Файлове: ${n}.`,noEta:"ниво T0 — не е нужна оценка",wrapUp:"подзадачите са готови, тече приемане",
     auto:"Автообновяване",autoOn:"Автообновяването е включено",autoOff:"Автообновяването е изключено",
     agoSec:s=>`преди ${s} сек`,agoMin:m=>`преди ${m} мин`,agoHr:(h,m)=>`преди ${h} ч ${m} мин`,
     debt:"Дълг",debtSub:(a,b,c)=>`заместители ${a} · допускания ${b} · променливи ${c}`,
-    tests:"Тестове",testsSub:"след последния таск",testsSubOne:"последно пълно изпълнение",failed:n=>`${n} провалени`,
+    tests:"Тестове",testsSub:"след последната подзадача",testsSubOne:"последно пълно изпълнение",failed:n=>`${n} провалени`,
     buildTook:d=>`разработката отне ${d}`,
     reqs:"Изисквания",reqsSub:(d,f,p)=>`отпаднали ${d} · отложени ${f} · заместители ${p}`,
     progress:"Ход на разработката",
-    wave:(n,c)=>c>1?`Вълна ${n} — ${c} таска паралелно`:`Вълна ${n}`,
+    wave:(n,c)=>c>1?`Вълна ${n} — ${c} подзадачи паралелно`:`Вълна ${n}`,
     chipDone:n=>`${n} готови`,chipRun:n=>`${n} в процес`,chipWait:n=>`${n} чакат`,chipFailed:n=>`${n} провалени`,
-    nowLbl:"Сега:",nowIdle:"В момента не тече таск.",
-    noTickets:"Все още няма таскове — тече подготовка.",
-    tblTickets:"Таскове",thN:"#",thTitle:"Таск",thReq:"Изисквания",thTime:"Време",thRetry:"Повт.",
+    nowLbl:"Сега:",nowIdle:"В момента не тече подзадача.",
+    noTickets:"Все още няма подзадачи — тече подготовка.",
+    tblTickets:"Подзадачи",thN:"#",thTitle:"Подзадача",thReq:"Изисквания",thTime:"Време",thRetry:"Повт.",
     thTests:"Тестове",thCommit:"Комит",tblEmpty:"все още празно",
     toClose:"Какво остава да се довърши",placeholders:"Заместители — чакат твоите данни",
     assumptions:"Решения, взети вместо теб",envVars:"Променливи в .env",
     additions:"Добавено извън поръчаното",none:"няма",
     blind:"Сляпо приемане",blindOk:"Няма разминавания.",blindBad:"Разминавания:",
     blindV:(m,c)=>`${m} / ${c} изисквания потвърдени`,
-    updated:"Обновено",filesIn:"Изисквания и таскове — в",
+    updated:"Обновено",filesIn:"Изисквания и подзадачи — в",
     modes:{full:"пълен автомат",semi:"полуавтомат",manual:"ръчен"},
     depths:{strict:"строго по брифа",normal:"обичайна дълбочина",deep:"максимална дълбочина"},
     tier:t=>`ниво ${t}`,finished:"завършено",min:"мин",hr:"ч",m:"м",
@@ -447,8 +447,8 @@ function render(lang){
   const cp = Math.max(0, ...T.map(t => depth(t.id, new Set())));
 
   // Оценката се смята в минути по веригата, а не „медиана × дължина на веригата“: иначе
-  // таск, който върви вече двадесет и седма минута, стои в оценката като незапочнат,
-  // а на последния почти завършен таск екранът пише „21 … 39 мин“.
+  // подзадача, която върви вече двадесет и седма минута, стои в оценката като незапочнат,
+  // а на последната почти завършена подзадача екранът пише „21 … 39 мин“.
   const memoMin = {};
   const leftFor = t => {
     if (!t || t.status === 'done') return 0;
@@ -487,8 +487,8 @@ function render(lang){
     ? spanMs(buildStage.startedAt, buildStage.finishedAt) : null;
 
   // Прогресът на целия проект. Теглата са дялове от времето, а не „етап = 1/8“: разработката
-  // трае часове, подготовката — минути. Вътре в разработката скалата се дели по готови таскове,
-  // затова тя пълзи с всеки таск, а не стои на място половин ден и после подскача.
+  // трае часове, подготовката — минути. Вътре в разработката скалата се дели по готови подзадачи,
+  // затова тя пълзи с всяка подзадача, а не стои на място половин ден и после подскача.
   const STAGE_WEIGHT = {preflight:1, manifest:1, briefing:1, spec:2, plan:1, build:6, review:2, final:1};
   const stageFrac = s => {
     if (s.status === 'done' || s.status === 'skipped') return 1;
@@ -505,7 +505,7 @@ function render(lang){
   const ticketPct = T.length ? Math.round(done.length/T.length*100) : 0;
   const retries = T.reduce((s,t) => s + (t.retries||0), 0);
   const last = done[done.length-1];
-  // Пълно изпълнение, ако е записано; иначе — тестовете от последното изпълнение: таск или T0-разработка.
+  // Пълно изпълнение, ако е записано; иначе — тестовете от последното изпълнение: подзадача или T0-разработка.
   const tests = S.tests || (last && last.tests) || (S.singlePass && S.singlePass.tests) || null;
   const debtN = (S.debt?.placeholders?.length||0) + (S.debt?.assumptions?.length||0) + (S.debt?.emptyEnv?.length||0);
 
@@ -522,16 +522,16 @@ function render(lang){
 
   const waves = [...new Set(T.map(t => t.wave ?? 1))].sort((a,b) => a-b);
   // Лентата показва СЪСТОЯНИЕ, а не дял. Преди ширината ѝ беше продължителност
-  // спрямо най-дългия таск — и готов таск за 19 от 28 минути изглеждаше
+  // спрямо най-дългата подзадача — и готова подзадача за 19 от 28 минути изглеждаше
   // „свършен на 68%“. Хоризонталното запълване в списък със задачи винаги се чете
-  // като прогрес, затова: готов — изцяло, в процес — изцяло със сияние и отблясък,
+  // като прогрес, затова: готова — изцяло, в процес — изцяло със сияние и отблясък,
   // чака — празен пунктир. Продължителността живее като число вдясно, там се чете.
   const timeline = T.length ? waves.map(w => {
     const inWave = T.filter(t => (t.wave ?? 1) === w)
       .sort((a,b) => String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
     const rows = inWave.map(t => {
       const active = t.status === 'in-progress', pend = t.status === 'pending';
-      // при незапочнат таск часовник няма: „0:00“ се чете като „върви и не мърда“
+      // при незапочната подзадача часовник няма: „0:00“ се чете като „върви и не мърда“
       const clock = (t.startedAt && !pend) ? timerHTML(t.startedAt, t.finishedAt) : '—';
       return `<div class="row${active?' now':''}${pend?' wait':''}"><b>${esc(t.id)}</b>
         <div class="track"><div class="fill${pend?' pend':''}${active?' active':''}"
@@ -553,7 +553,7 @@ function render(lang){
           t.startedAt ? timerHTML(t.startedAt, null) : '—'}</span>`).join(' · ') + '</div>'
     : (S.finishedAt || done.length === T.length ? '' : `<div class="tlnow lbl">${L.nowIdle}</div>`);
 
-  // Лентата с етапи — тя е и отговорът на „къде сме сега“, когато таскове изобщо няма.
+  // Лентата с етапи — тя е и отговорът на „къде сме сега“, когато подзадачи изобщо няма.
   const stageRows = stages.map(s => {
     const dur = s.status === 'skipped' ? L.skipped
       : s.startedAt ? timerHTML(s.startedAt, s.finishedAt)
@@ -579,7 +579,7 @@ function render(lang){
     <td class="mins">${t.commit ? `<code>${esc(t.commit).slice(0,7)}</code>` : '—'}</td>
   </tr>`).join('');
 
-  // Ниво T0: таскове няма по замисъл — вместо празна таблица показваме самото изпълнение.
+  // Ниво T0: подзадачи няма по замисъл — вместо празна таблица показваме самото изпълнение.
   const sp = S.singlePass || null;
   const t0block = `<div class="note"><b>${L.t0note(sp?.files?.length ? L.t0files(sp.files.length) : '')}</b>
     <div class="sub" style="margin-top:6px">

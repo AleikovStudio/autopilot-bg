@@ -73,7 +73,7 @@ Write `.autopilot/README.md` — a short note for the human, not for the agent:
 - `<проект>/<дата>-brief.md` — първоначалната ти задача, дума по дума. Не се редактира.
 - `<проект>/manifest.md` — списък с изискванията и какво е станало с всяко от тях.
 - `<проект>/spec.md` — спецификацията.
-- `<проект>/tickets/` — тасковете, на които е разделена работата (при малък проект ги няма).
+- `<проект>/tickets/` — подзадачите, на които е разделена работата (при малък проект ги няма).
 
 Ако сглобяването прекъсне — кажи на агента „продължи автопилота“ и той ще вдигне състоянието оттук.
 ```
@@ -112,7 +112,7 @@ Leaving any phase means the same two marks, here and everywhere after: the stage
 `.autopilot/state.json` exists with `finishedAt` still `null` → this is a resume, not a new flight. (A run that finished is the third case at the top of this file, not this one — and at tier T0 there are no tickets to be unfinished, so `finishedAt` is the only reliable test.)
 
 1. Read the project memory file first (`memoryFile` in `state.json` — `CLAUDE.md` or `AGENTS.md`), then `state.json`, `manifest.md`, `interfaces.md`. Do **not** re-read the whole dialogue; the files are the memory. The brief is `<slug>/*-brief.md` — the newest one if there is more than one.
-2. Tell the user in one line where things stand: „Продължавам: 7 от 12 таска са готови, следващият е количката“.
+2. Tell the user in one line where things stand: „Продължавам: 7 от 12 подзадачи са готови, следващият е количката“.
    Reopen the dashboard only if the previous run had finished (`finishedAt` set) — mid-flight, assume the tab is still open and just say the path.
 3. A ticket marked `in-progress` in `state.json` with no commit behind it was interrupted mid-flight. Reset it to `pending` and run it again from scratch — a half-applied ticket is worse than a fresh one.
 4. Re-run the Phase 6 checklist over the whole diff since the last green commit before continuing. Something may have been left broken.
