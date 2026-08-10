@@ -75,6 +75,10 @@ Run the same checklist against yourself and write the answers into the manifest,
 
 Same rules, no cap. Keep asking until nothing blocking remains, then say so plainly: „Няма повече въпроси, пиша спецификацията“.
 
+**Manual mode also runs a confirmation pass over the manifest itself**, after the blocking questions and before moving to Phase 3. For every requirement — not just the ones a blocking question already touched — say, one at a time: „R03 съм го разбрал като «X» — правилно ли е?“ A correction is recorded into the manifest row verbatim, the same as any other briefing answer; a plain confirmation needs no manifest edit. This exists because manual-mode users are choosing to stay this involved — `full` and `semi` do not run this pass, and stay exactly as documented above.
+
+Every manifest edit made anywhere in this phase — from a blocking answer, a fork, or this confirmation pass — is mirrored into `state.json`'s `requirements.items` (see `phases/7-instruments.md`) in the same edit, not batched for later. The dashboard should never be behind the manifest file by more than one write.
+
 ## Closing
 
 Before leaving this phase, check **gate G1**: every manifest row has a status; nothing is `open` without a recorded reason. Then announce the transition in one line — „Разбрах. Пиша спецификацията“ — and go to Phase 3.
