@@ -1,6 +1,6 @@
 # Phase 6 — Checklist
 
-Review of each ticket's diff along three axes. Not sequential — it runs inside Phase 5, after every ticket.
+Review of each ticket's diff along three axes. Not sequential — it runs inside Phase 5, after every ticket. **Does not run at all for a `human`-owned ticket** — there is no diff, the user did the work outside the repo. If the user later reports a problem with something they marked done, treat it as a new finding through the normal manifest/briefing path, not a failed review: see `phases/5-subagents.md`, "When a ticket is `human`-owned".
 
 Three axes, because a change can pass one and fail another:
 
