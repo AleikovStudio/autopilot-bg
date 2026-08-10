@@ -298,6 +298,7 @@ const I18N = {
     reqsTitle:"Изисквания от брифа",thReqId:"№",thReqText:"Изискване",thReqStatus:"Статус",
     reqStatus:{open:"отворено",'in-spec':"в спецификацията",'in-ticket':"в подзадача",done:"готово",
       placeholder:"заместител",deferred:"отложено",dropped:"отпаднало"},
+    ownerAgent:"агент",ownerHuman:"ти",waitingForYou:"Чака теб",
     progress:"Ход на разработката",
     wave:(n,c)=>c>1?`Вълна ${n} — ${c} подзадачи паралелно`:`Вълна ${n}`,
     chipDone:n=>`${n} готови`,chipRun:n=>`${n} в процес`,chipWait:n=>`${n} чакат`,chipFailed:n=>`${n} провалени`,
@@ -337,6 +338,7 @@ const I18N = {
     reqsTitle:"Requirements from the brief",thReqId:"#",thReqText:"Requirement",thReqStatus:"Status",
     reqStatus:{open:"open",'in-spec':"in spec",'in-ticket':"in ticket",done:"done",
       placeholder:"placeholder",deferred:"deferred",dropped:"dropped"},
+    ownerAgent:"agent",ownerHuman:"you",waitingForYou:"Waiting on you",
     progress:"Build progress",
     wave:(n,c)=>c>1?`Wave ${n} — ${c} tickets in parallel`:`Wave ${n}`,
     chipDone:n=>`${n} done`,chipRun:n=>`${n} running`,chipWait:n=>`${n} waiting`,chipFailed:n=>`${n} failed`,
@@ -529,6 +531,11 @@ function render(lang){
   const reqStatusColor = s => s === 'done' ? 'var(--ok)' : s === 'dropped' ? 'var(--bad)'
     : (s === 'in-spec' || s === 'in-ticket' || s === 'placeholder') ? 'var(--warn)' : 'var(--line)';
 
+  const ownerBadge = t => {
+    const isHuman = t.owner === 'human';
+    return `<span class="tag" title="${isHuman ? L.ownerHuman : L.ownerAgent}">${isHuman ? '👤' : '🤖'}</span>`;
+  };
+
   const waves = [...new Set(T.map(t => t.wave ?? 1))].sort((a,b) => a-b);
   // Лентата показва СЪСТОЯНИЕ, а не дял. Преди ширината ѝ беше продължителност
   // спрямо най-дългата подзадача — и готова подзадача за 19 от 28 минути изглеждаше
@@ -540,12 +547,13 @@ function render(lang){
       .sort((a,b) => String(a.id).localeCompare(String(b.id), undefined, {numeric:true}));
     const rows = inWave.map(t => {
       const active = t.status === 'in-progress', pend = t.status === 'pending';
+      const waitingOnHuman = active && t.owner === 'human';
       // при незапочната подзадача часовник няма: „0:00“ се чете като „върви и не мърда“
       const clock = (t.startedAt && !pend) ? timerHTML(t.startedAt, t.finishedAt) : '—';
       return `<div class="row${active?' now':''}${pend?' wait':''}"><b>${esc(t.id)}</b>
         <div class="track"><div class="fill${pend?' pend':''}${active?' active':''}"
-          style="width:100%${pend?'':';background:'+statusColor(t.status)}">${esc(t.title)}</div></div>
-        <div class="mins">${clock}</div></div>`;
+          style="width:100%${pend?'':';background:'+statusColor(t.status)}">${ownerBadge(t)}${esc(t.title)}</div></div>
+        <div class="mins">${waitingOnHuman ? `<span class="badge">${L.waitingForYou}</span>` : clock}</div></div>`;
     }).join('');
     return `<div class="wave">${L.wave(w, inWave.length)}</div>${rows}`;
   }).join('') : `<div class="empty">${L.noTickets}</div>`;
@@ -579,7 +587,7 @@ function render(lang){
 
   const rows = T.map(t => `<tr>
     <td><b>${esc(t.id)}</b></td>
-    <td><span class="dot" style="background:${statusColor(t.status)}"></span>${esc(t.title)}
+    <td>${ownerBadge(t)}<span class="dot" style="background:${statusColor(t.status)}"></span>${esc(t.title)}
       ${t.concerns?.length ? `<div class="sub">${esc(t.concerns.join('; '))}</div>` : ''}</td>
     <td>${(t.requirements||[]).map(r => `<span class="tag">${esc(r)}</span>`).join('') || '<span class="empty">—</span>'}</td>
     <td class="mins">${t.startedAt ? timerHTML(t.startedAt, t.finishedAt) : '—'}</td>

@@ -123,6 +123,7 @@ Say it in one line, once:
   "tickets": [
     {
       "id": "03",
+      "owner": "agent",
       "title": "Приемане на заявка от клиент",
       "requirements": ["R01", "R01.1", "A01"],
       "blockedBy": ["01", "02"],
@@ -168,6 +169,8 @@ Ticket `status`: `pending` · `in-progress` · `done` · `failed`.
 
 `mismatches` is the list of disagreements between the manifest and the blind verdict, in plain language, one string each; an empty array means the check found none. **Any other spelling — `disagreements`, `drift`, `issues` — makes the dashboard print „Няма разминавания“ over real drift**, which is the one failure this whole phase exists to prevent.
 `memoryFile` is the project memory chosen in Phase 0 — `CLAUDE.md` or `AGENTS.md`, see `phases/9-memory.md`. A resume reads that file first.
+
+**`owner` says who executes the ticket** — `"agent"` (subagent writes code/acts through a connected tool, unchanged from today) or `"human"` (the user does it by hand — WordPress admin clicks, Divi Builder, anything outside the agent's reach). **Missing `owner` reads as `"agent"` everywhere it is checked** — this is what keeps every run written before this field existed rendering exactly as it did before. See `phases/4-plan.md` for how it gets decided and `phases/5-subagents.md` for how Phase 5 branches on it.
 
 **Never put a secret value in here.** `emptyEnv` holds names only — the whole point of the list.
 
