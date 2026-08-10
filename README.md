@@ -70,8 +70,6 @@ git clone https://github.com/AleikovStudio/autopilot-bg.git /tmp/ap-bg && cp -r 
 
 Нужни са: Node.js (за `npx`) и някой поддържан AI агент — Claude Code, Cursor, Codex и още десетки. Нищо повече.
 
-> ⚠️ Умението се казва `autopilot` — същото име като оригинала. Ако имаш инсталирана руската версия, тази ще я замени. Това е нарочно: командата остава `/autopilot`.
-
 ---
 
 ## Как се използва
