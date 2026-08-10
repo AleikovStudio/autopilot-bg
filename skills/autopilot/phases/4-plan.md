@@ -83,12 +83,26 @@ If a wave genuinely has to change, that is a re-cut and it follows the rules for
 
 Write `wave` into every ticket file and into `state.json`. The dashboard groups the build by waves and marks the parallel ones („Вълна 3 — 2 подзадачи паралелно“); Phase 5 launches each wave in one go.
 
+## Who executes each ticket
+
+Every ticket gets an `owner`: `agent` (default — a subagent builds it, exactly as today) or `human` (the user does it by hand — a WordPress admin setting, a Divi Builder change, anything outside what the agent's tools reach).
+
+| Signal | Owner |
+|---|---|
+| Buildable with a tool the agent has — code in the repo, a connected MCP (e.g. Respira) | `agent` |
+| Requires a manual action only the user can perform — builder UI clicks, an admin toggle with no matching MCP ability | `human` |
+| Ambiguous | default to `agent`, but flag it plainly when showing the plan — do not silently guess on an ambiguous one |
+
+In **manual** mode, showing the plan (below) includes each ticket's owner, and the user can reassign any ticket before saying „ок“ — same gate, same moment, no extra round-trip.
+
+In **full** and **semi**, ownership is decided from the table above without waiting for confirmation, in keeping with those modes only pausing on blocking unknowns — and it is reported like any other decision made for the user.
+
 ## Publishing the plan to the instruments
 
 The moment the ticket files exist, **every ticket goes into `state.json` and into the dashboard** — not when the first one starts, not after the first one lands:
 
 ```json
-{ "id": "04", "title": "Панел на майстора: опашка от заявки", "requirements": ["R04", "R04.1"],
+{ "id": "04", "owner": "agent", "title": "Панел на майстора: опашка от заявки", "requirements": ["R04", "R04.1"],
   "blockedBy": ["02"], "wave": 3, "zone": ["src/admin/"], "status": "pending", "retries": 0 }
 ```
 
@@ -109,6 +123,7 @@ Every ticket file:
 **Blocked by:** 01, 02
 **Зона:** `src/bot/`
 **Вълна:** 2
+**Изпълнява:** агент
 **Status:** ready
 
 ## Какво трябва да заработи
@@ -159,4 +174,4 @@ Write the files first. **A ticket that exists only in the dialogue is not a tick
 
 **full** — the same screen as a notification. No pause.
 
-**manual** — the plan is a gate. Show it with technical detail, discuss granularity and order, adjust on request, wait for an explicit „ок“. Phase 5 starts only on agreed tickets.
+**manual** — the plan is a gate. Show it with technical detail, **including who executes each ticket**, discuss granularity/order/ownership, adjust on request, wait for an explicit „ок“. Phase 5 starts only on agreed tickets.
