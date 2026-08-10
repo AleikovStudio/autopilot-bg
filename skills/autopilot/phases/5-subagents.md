@@ -90,6 +90,8 @@ Set the ticket's `status` to `in-progress` and its `startedAt` to now **before**
 
 For a wave, that is **one state write for the whole wave**, before the launch message — all of its tickets flipped together. Two clocks running side by side on the dashboard is what parallel work looks like; two tickets marked `in-progress` an edit apart is the same thing and costs half as much.
 
+**A `human`-owned ticket does not get a subagent.** Mark it `in-progress` and `startedAt` exactly like an `agent` ticket — the clock still matters, the user should see how long they have been waiting on themselves — but do not launch anything for it. Instead, in the same message where you report the wave's launch, add one line naming what the user needs to do: „Готов си за 03 — настрой навигационното меню в Divi 5 Theme Builder по спецификацията. Кажи ми като приключиш.“ A wave with both kinds in it launches its `agent` tickets normally and announces its `human` tickets in the same breath — neither waits for the other.
+
 ## After each ticket
 
 In this order, every time:
@@ -103,6 +105,29 @@ In this order, every time:
 7. **Update the instruments** (`phases/7-instruments.md`) — one line of state, one line of the dashboard: the ticket's `finishedAt`, tests and commit, the `requirements` counts, the `build` and `review` stage notes („3 от 5 подзадачи готови“), `updatedAt`.
 8. **Top up the project memory — only if something was discovered.** The real test command, a gotcha that cost time, a new variable in `.env.example`. One line appended between the markers, never a rewrite; the architecture is written once, at the end. Most tickets add nothing, and that is the correct rate. Rules in `phases/9-memory.md`.
 9. **Tell the user one plain-language line**: „Ботът приема заявки — 3 от 8 готови“. No diffs, no jargon, no file lists.
+
+### When a ticket is `human`-owned
+
+There is no contract block, no diff, no test run — the user did the work outside the repo. When they tell you it is done (by ticket id, by name, or unambiguously — "готово" when exactly one human ticket is waiting):
+
+1. **Update the manifest** — the ticket's requirements move to `done`, Основание notes it was done by the user, no commit reference.
+2. **Skip Phase 6 entirely.** There is nothing to review — see `phases/6-review.md`.
+3. **Update the instruments** — `status: "done"`, `finishedAt` now, leave `files`/`tests`/`commit` as they were (empty). The dashboard already renders these as `—` when absent; that is correct here, not a gap to fill.
+4. **Tell the user one plain-language line**, same as an agent ticket: „Менюто е готово — 3 от 8 подзадачи.“
+5. If the user instead says it is **not** done, or only partly — do not mark it done. Ask what is missing and leave it `in-progress`. This is not a `failed` ticket (nothing failed); it is simply still open. Only mark `failed` if the user explicitly abandons the ticket, and treat that the same as any dropped requirement: back to the manifest, a quote, a question — never a silent status flip.
+
+A `human` ticket never produces a `D##` row or an `interfaces.md` entry on its own — those exist for what code exposes to other code. If the user's manual work changes a decision the plan assumed (e.g. a menu structure that turned out not to fit the theme), that is still a plan-contradiction per "When the build contradicts the plan" below, handled the same way regardless of which kind of ticket surfaced it.
+
+## When the user takes over a ticket already running
+
+Allowed at any point, the same way a mode or depth switch is allowed mid-run: the user says something like „дай на мен тази задача“ for a ticket currently `in-progress` with `owner: "agent"`.
+
+1. If a subagent is in flight for it, let it finish its current step rather than killing it mid-write — an interrupted code edit is worse than a finished one you then discard.
+2. Set `owner` to `"human"` on that ticket.
+3. Whatever the subagent already produced stays — this is a handoff, not a rollback. Tell the user in one line what exists so far and what is left: „Досега е готова схемата на менюто във файла; остава да я пренесеш в Theme Builder.“
+4. From here it follows the `human`-ticket path exactly: no further subagent launches for it, marked `done` when the user says so, no Phase 6 review.
+
+The reverse direction — a `human` ticket the user asks the agent to take over instead — follows the same shape: flip `owner` to `"agent"`, then launch a subagent for it exactly as Phase 5 would for any newly-launchable ticket, with the user's own description of what is already done included in its prompt so it does not redo finished work.
 
 ### When two tickets return together
 
