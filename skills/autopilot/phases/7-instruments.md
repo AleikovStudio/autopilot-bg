@@ -149,6 +149,18 @@ Say it in one line, once:
 Ticket `status`: `pending` · `in-progress` · `done` · `failed`.
 `wave` and `zone` come from Phase 4 — the wave decides what flies together, the zone is why it may.
 `tests` is the last **full** suite run; `blind` stays `null` until the final phase.
+
+**`blind` has exactly three fields, and the names are not negotiable** — the dashboard reads them literally:
+
+```json
+"blind": {
+  "matched": 11,
+  "checked": 12,
+  "mismatches": ["R07 — статусът се пази, но не се показва на клиента"]
+}
+```
+
+`mismatches` is the list of disagreements between the manifest and the blind verdict, in plain language, one string each; an empty array means the check found none. **Any other spelling — `disagreements`, `drift`, `issues` — makes the dashboard print „Няма разминавания“ over real drift**, which is the one failure this whole phase exists to prevent.
 `memoryFile` is the project memory chosen in Phase 0 — `CLAUDE.md` or `AGENTS.md`, see `phases/9-memory.md`. A resume reads that file first.
 
 **Never put a secret value in here.** `emptyEnv` holds names only — the whole point of the list.
